@@ -6,14 +6,16 @@ on:
       - master
       - feature-**
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.8.8
-        with:
+      - name: Deploy to Heroku
+        env:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
+        if: github.ref == 'refs/heads/feature-cicd' && job.status == 'success'
+        run: |
+          git push https://heroku:$heroku_api_key@git.heroku.com/$heroku_app_name.git origin/feature-cicd:master
