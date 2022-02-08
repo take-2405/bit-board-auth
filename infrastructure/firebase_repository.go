@@ -1,6 +1,7 @@
 package infrastructure
 
 import (
+	"bit-board-auth/infrastructure/disutil"
 	"context"
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
@@ -13,10 +14,12 @@ type firebaseRepository struct {
 }
 
 func NewFirebase() *firebaseRepository {
+	disutil.CreateFireBaseConfig()
+
 	inst := new(firebaseRepository)
 	inst.ctx = context.Background()
 
-	opt := option.WithCredentialsFile("./.secret/bit-board-dcf2c-firebase-adminsdk-rudoq-a5211118ec.json")
+	opt := option.WithCredentialsFile("./firebase-auth.json")
 	// GOOGLE_APPLICATION_CREDENTIALSで指定した認証情報ファイルを暗黙的に読み込む
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
