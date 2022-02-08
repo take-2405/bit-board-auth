@@ -10,6 +10,7 @@ require (
 	cloud.google.com/go/storage v1.20.0 // indirect
 	firebase.google.com/go v3.13.0+incompatible // indirect
 	github.com/go-chi/chi/v5 v5.0.7 // indirect
+	github.com/go-chi/cors v1.2.0 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.7 // indirect
