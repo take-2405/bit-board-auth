@@ -1,6 +1,7 @@
 package router
 
 import (
+	"bit-board-auth/presentation/controller"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"net/http"
@@ -19,9 +20,14 @@ func NewServer() *Server {
 }
 
 // Router ルーティング設定
-func (s *Server) Routing() {
+func (s *Server) Routing(uh controller.UserHandler) {
 	s.Router.Use(middleware.Timeout(60 * time.Second))
 	s.Router.Use(middleware.Logger)
+	s.Router.Route("/sign", func(api chi.Router) {
+		api.Route("/up", func(signup chi.Router) {
+			signup.Post("/", uh.SignUp())
+		})
+	})
 	s.Router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("hello"))
 	})
