@@ -16,6 +16,6 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
-        if: github.ref == 'refs/heads/feature-cicd' && job.status == 'success'
+        if: github.ref == 'refs/heads/master' && job.status == 'success'
         run: |
           git push https://heroku:$heroku_api_key@git.heroku.com/$heroku_app_name.git origin/feature-cicd:master
