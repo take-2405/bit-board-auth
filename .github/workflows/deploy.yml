@@ -1,33 +1,40 @@
-#jobs:
-#  build:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
-#        with:
-#          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-#          heroku_app_name: ${{secrets.HEROKU_APP}}
-#          heroku_email: ${{secrets.HEROKU_EMAIL}}
-name: ci
-
+name: Heroku push
 on:
   push:
     branches:
-#      - master
-      - feature-**
+      - master
+  workflow_dispatch:
 
 jobs:
-  backend:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.7.8
         with:
-          fetch-depth: 0
-      - name: Deploy to Heroku
-        env:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
+          heroku_app_name: "bit-board-auth"
           heroku_email: ${{secrets.HEROKU_EMAIL}}
-        if: github.ref == 'refs/heads/master' && job.status == 'success'
-        run: |
-          git push https://heroku:$heroku_api_key@git.heroku.com/$heroku_app_name.git origin/master:master
+#name: ci
+#
+#on:
+#  push:
+#    branches:
+##      - master
+#      - feature-**
+#
+#jobs:
+#  backend:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#        with:
+#          fetch-depth: 0
+#      - name: Deploy to Heroku
+#        env:
+#          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+#          heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
+#          heroku_email: ${{secrets.HEROKU_EMAIL}}
+#        if: github.ref == 'refs/heads/master' && job.status == 'success'
+#        run: |
+#          git push https://heroku:$heroku_api_key@git.heroku.com/$heroku_app_name.git origin/master:master
