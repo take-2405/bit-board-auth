@@ -2,13 +2,12 @@ package usecase
 
 import (
 	"bit-board-auth/domain/repository"
-	"github.com/google/uuid"
 	"log"
 )
 
 type AuthUseCase interface {
 	SignUp(userName, email, pass string) (string, error)
-	SignIn(id, pass string) (string, error)
+	SignIn(email, pass string) (string, error)
 }
 
 type authUseCase struct {
@@ -20,30 +19,20 @@ func NewAuthUseCase(user repository.UserRepository) *authUseCase {
 }
 
 func (uu authUseCase) SignUp(userName, email, pass string) (string, error) {
+	uid, err := uu.user.CreateUsersAccount(userName, email, pass)
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+	return uid, nil
+}
 
-	if err := uu.user.CreateUsersAccount(userName, email, pass); err != nil {
+func (uu authUseCase) SignIn(email, pass string) (string, error) {
+	user, err := uu.user.GetUserInfo(email)
+	if err != nil {
 		log.Println(err)
 		return "a", err
 	}
-
-	return "a", nil
-}
-
-func (uu authUseCase) SignIn(id, pass string) (string, error) {
-	var token string
-
-	uuid, err := uuid.NewRandom()
-	if err != nil {
-		log.Println(err)
-		return token, err
-	}
-
-	token = uuid.String()
-
-	if err = uu.user.GetUserInfo(id, pass); err != nil {
-		log.Println(err)
-		return token, err
-	}
-
-	return token, nil
+	log.Println(user)
+	return user.UID, nil
 }

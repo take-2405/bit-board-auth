@@ -35,17 +35,31 @@ func (uh userHandler) SignUp() http.HandlerFunc {
 			return
 		}
 
-		token, err := uh.userUseCase.SignUp(accountInfo.UserName, accountInfo.Email, accountInfo.Pass)
+		uid, err := uh.userUseCase.SignUp(accountInfo.UserName, accountInfo.Email, accountInfo.Pass)
 		if err != nil {
 			response.RespondError(writer, http.StatusInternalServerError, err)
 			return
 		}
 
-		writer.Write([]byte(token))
+		writer.Write([]byte(uid))
 	}
 }
 
-func (u userHandler) SignIn() http.HandlerFunc {
-	//TODO implement me
-	panic("implement me")
+func (uh userHandler) SignIn() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		var accountInfo request2.CreateUserAccountRequest
+		json.NewDecoder(request.Body).Decode(&accountInfo)
+
+		if accountInfo.Email == "" || accountInfo.Pass == "" || accountInfo.UserName == "" {
+			log.Println("[ERROR] request bucket is err")
+			response.RespondError(writer, http.StatusBadRequest, fmt.Errorf("リクエスト情報が不足しています"))
+			return
+		}
+		uid, err := uh.userUseCase.SignIn(accountInfo.Email, accountInfo.Pass)
+		if err != nil {
+			response.RespondError(writer, http.StatusInternalServerError, err)
+			return
+		}
+		writer.Write([]byte(uid))
+	}
 }

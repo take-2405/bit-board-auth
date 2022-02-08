@@ -27,6 +27,9 @@ func (s *Server) Routing(uh controller.UserHandler) {
 		api.Route("/up", func(signup chi.Router) {
 			signup.Post("/", uh.SignUp())
 		})
+		api.Route("/in", func(signup chi.Router) {
+			signup.Post("/", uh.SignIn())
+		})
 	})
 	s.Router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("hello"))
