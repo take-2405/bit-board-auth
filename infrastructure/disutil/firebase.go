@@ -6,7 +6,7 @@ import (
 )
 
 func CreateFireBaseConfig() {
-	fp, err := os.Create("./../firebase-auth.json")
+	fp, err := os.Create("./firebase-auth.json")
 	if err != nil {
 		fmt.Println(err)
 		return
