@@ -7,7 +7,7 @@ import (
 )
 
 type AuthUseCase interface {
-	SignUp(id, pass string) (string, error)
+	SignUp(userName, email, pass string) (string, error)
 	SignIn(id, pass string) (string, error)
 }
 
@@ -19,22 +19,14 @@ func NewAuthUseCase(user repository.UserRepository) *authUseCase {
 	return &authUseCase{user: user}
 }
 
-func (uu authUseCase) SignUp(id, pass string) (string, error) {
-	var token string
+func (uu authUseCase) SignUp(userName, email, pass string) (string, error) {
 
-	uuid, err := uuid.NewRandom()
-	if err != nil {
+	if err := uu.user.CreateUsersAccount(userName, email, pass); err != nil {
 		log.Println(err)
-		return token, err
+		return "a", err
 	}
 
-	token = uuid.String()
-	if err = uu.user.CreateUsersAccount(id, pass, token); err != nil {
-		log.Println(err)
-		return token, err
-	}
-
-	return token, nil
+	return "a", nil
 }
 
 func (uu authUseCase) SignIn(id, pass string) (string, error) {
