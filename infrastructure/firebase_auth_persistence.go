@@ -3,7 +3,9 @@ package infrastructure
 import (
 	"bit-board-auth/domain/repository"
 	"firebase.google.com/go/auth"
+	"fmt"
 	"log"
+	"os"
 )
 
 type firebasePersistence struct {
@@ -15,6 +17,10 @@ func NewArticlePersistence(firebase firebaseRepository) repository.UserRepositor
 }
 
 func (f *firebasePersistence) CreateUsersAccount(userName, email, pass string) (string, error) {
+	fmt.Println("FS_AUTH_PROVIDER_X509_CERT_URL")
+
+	fmt.Println(os.Getenv("FS_AUTH_PROVIDER_X509_CERT_URL"))
+	fmt.Println(os.Getenv("FS_CLIENT_X509_CERT_URL"))
 	params := (&auth.UserToCreate{}).
 		Email(email).
 		Password(pass).

@@ -36,10 +36,6 @@ func CreateFireBaseConfig() {
 		os.Getenv("FS_AUTH_PROVIDER_X509_CERT_URL"),
 		os.Getenv("FS_CLIENT_X509_CERT_URL"))
 
-	fmt.Println("FS_AUTH_PROVIDER_X509_CERT_URL")
-
-	fmt.Println(os.Getenv("FS_AUTH_PROVIDER_X509_CERT_URL"))
-	fmt.Println(os.Getenv("FS_CLIENT_X509_CERT_URL"))
 	_, err = fp.Write(([]byte)(file))
 	if err != nil {
 		fmt.Println(err)
