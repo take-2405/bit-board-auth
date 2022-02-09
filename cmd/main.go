@@ -29,5 +29,8 @@ func main() {
 
 	//ルーター起動
 	port := config.GetServerPort()
-	http.ListenAndServe(port, router.Router)
+	err = http.ListenAndServe(port, router.Router)
+	if err != nil {
+		log.Fatalf("failed create firebase info file: %v", err)
+	}
 }

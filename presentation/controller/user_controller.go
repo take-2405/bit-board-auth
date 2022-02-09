@@ -27,7 +27,11 @@ func (uh userHandler) SignUp() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		// リクエストBodyから更新後情報を取得
 		var accountInfo request2.CreateUserAccountRequest
-		json.NewDecoder(request.Body).Decode(&accountInfo)
+		err := json.NewDecoder(request.Body).Decode(&accountInfo)
+		if err != nil {
+			log.Println("[ERROR] request bind is err")
+			response.RespondError(writer, http.StatusInternalServerError, fmt.Errorf("リクエストの取得に失敗しました"))
+		}
 
 		if accountInfo.Email == "" || accountInfo.Pass == "" || accountInfo.UserName == "" {
 			log.Println("[ERROR] request bucket is err")
@@ -54,7 +58,11 @@ func (uh userHandler) SignUp() http.HandlerFunc {
 func (uh userHandler) SignIn() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		var accountInfo request2.CreateUserAccountRequest
-		json.NewDecoder(request.Body).Decode(&accountInfo)
+		err := json.NewDecoder(request.Body).Decode(&accountInfo)
+		if err != nil {
+			log.Println("[ERROR] request bind is err")
+			response.RespondError(writer, http.StatusInternalServerError, fmt.Errorf("リクエストの取得に失敗しました"))
+		}
 
 		if accountInfo.Email == "" || accountInfo.Pass == "" || accountInfo.UserName == "" {
 			fmt.Println("[ERROR] request bucket is err")

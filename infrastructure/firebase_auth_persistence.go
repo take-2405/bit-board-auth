@@ -6,18 +6,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-type firebaseRes struct {
-	Error struct {
-		Code    int    `json:"code"`
-		Message string `json:"message"`
-		Errors  []struct {
-			Message string `json:"message"`
-			Domain  string `json:"domain"`
-			Reason  string `json:"reason"`
-		} `json:"errors"`
-	} `json:"error"`
-}
-
 type firebasePersistence struct {
 	firebase firebaseRepository
 }
@@ -27,7 +15,7 @@ func NewArticlePersistence(firebase firebaseRepository) repository.UserRepositor
 }
 
 func (f *firebasePersistence) CreateUsersAccount(userName, email, pass string) (string, error) {
-	u, err := f.firebase.Auth.GetUserByEmail(f.firebase.ctx, email)
+	_, err := f.firebase.Auth.GetUserByEmail(f.firebase.ctx, email)
 	if err == nil {
 		return "", errors.New("this email already register")
 	}
@@ -38,7 +26,7 @@ func (f *firebasePersistence) CreateUsersAccount(userName, email, pass string) (
 		DisplayName(userName).
 		Disabled(false)
 
-	u, err = f.firebase.Auth.CreateUser(f.firebase.ctx, params)
+	u, err := f.firebase.Auth.CreateUser(f.firebase.ctx, params)
 	if err != nil {
 		return "", errors.WithStack(err)
 	}

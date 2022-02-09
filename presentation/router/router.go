@@ -43,6 +43,6 @@ func (s *Server) Routing(uh controller.UserHandler) {
 		})
 	})
 	s.Router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("hello"))
+		_, _ = w.Write([]byte("hello"))
 	})
 }
