@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
 )
 
 type firebasePersistence struct {
@@ -20,13 +19,13 @@ func NewArticlePersistence(firebase firebaseRepository) repository.UserRepositor
 func (f *firebasePersistence) CreateUsersAccount(userName, email, pass string) (string, error) {
 	data, _ := ioutil.ReadFile("./firebase-auth.json")
 	fmt.Println(string(data))
+
 	params := (&auth.UserToCreate{}).
 		Email(email).
 		Password(pass).
 		DisplayName(userName).
 		Disabled(false)
 	u, err := f.firebase.Auth.CreateUser(f.firebase.ctx, params)
-	fmt.Println(os.Getenv("ここまで実行1"))
 	if err != nil {
 		log.Println(err)
 		return "", err
