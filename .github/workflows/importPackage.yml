@@ -1,23 +1,19 @@
-name: lint
+name: check import package
 on:
   push:
     branches:
       - master
       - feature**
-  pull_request:
 jobs:
-  golangci:
-    strategy:
-      matrix:
-        go-version: [1.15.x]
-        os: [ubuntu-latest]
-    name: lint
-    runs-on: ${{ matrix.os }}
+  vulns:
+    name: Vulnerability scanner
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v2
+      - uses: actions/setup-go@v2
         with:
-          version: latest
-      - name: testing
-        run: go test ./...
+          go-version: ^1.13
+      - name: WriteGoList
+        run: go list -json -m all > go.list
+      - name: Nancy
+        uses: sonatype-nexus-community/nancy-github-action@main
