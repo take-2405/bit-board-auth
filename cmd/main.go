@@ -5,19 +5,18 @@ import (
 	"bit-board-auth/di"
 	"bit-board-auth/infrastructure/disutil"
 	router2 "bit-board-auth/presentation/router"
-	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 )
 
 func main() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatalf("can not read env file: %v", err)
-	}
+	//err := godotenv.Load(".env")
+	//if err != nil {
+	//	log.Fatalf("can not read env file: %v", err)
+	//}
 
 	//firebaseの接続情報ファイルを作成
-	err = disutil.CreateFireBaseConfig()
+	err := disutil.CreateFireBaseConfig()
 	if err != nil {
 		log.Fatalf("failed create firebase info file: %v", err)
 	}
