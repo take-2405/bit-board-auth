@@ -4,6 +4,7 @@ import (
 	"bit-board-auth/domain/repository"
 	"firebase.google.com/go/auth"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 )
@@ -17,16 +18,15 @@ func NewArticlePersistence(firebase firebaseRepository) repository.UserRepositor
 }
 
 func (f *firebasePersistence) CreateUsersAccount(userName, email, pass string) (string, error) {
-	fmt.Println("FS_AUTH_PROVIDER_X509_CERT_URL")
-
-	fmt.Println(os.Getenv("FS_AUTH_PROVIDER_X509_CERT_URL"))
-	fmt.Println(os.Getenv("FS_CLIENT_X509_CERT_URL"))
+	data, _ := ioutil.ReadFile("./firebase-auth.json")
+	fmt.Println(string(data))
 	params := (&auth.UserToCreate{}).
 		Email(email).
 		Password(pass).
 		DisplayName(userName).
 		Disabled(false)
 	u, err := f.firebase.Auth.CreateUser(f.firebase.ctx, params)
+	fmt.Println(os.Getenv("ここまで実行1"))
 	if err != nil {
 		log.Println(err)
 		return "", err
