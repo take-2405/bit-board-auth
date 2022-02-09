@@ -8,6 +8,10 @@ import (
 )
 
 func main() {
+	//err := godotenv.Load(".env")
+	//if err != nil {
+	//	fmt.Printf("読み込み出来ませんでした: %v", err)
+	//}
 
 	//ルーターを初期化
 	router := router2.NewServer()
