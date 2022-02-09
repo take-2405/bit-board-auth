@@ -27,39 +27,60 @@ func (uh userHandler) SignUp() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		// リクエストBodyから更新後情報を取得
 		var accountInfo request2.CreateUserAccountRequest
-		json.NewDecoder(request.Body).Decode(&accountInfo)
+		err := json.NewDecoder(request.Body).Decode(&accountInfo)
+		if err != nil {
+			log.Println("[ERROR] request bind is err")
+			response.RespondError(writer, http.StatusInternalServerError, fmt.Errorf("リクエストの取得に失敗しました"))
+		}
 
 		if accountInfo.Email == "" || accountInfo.Pass == "" || accountInfo.UserName == "" {
 			log.Println("[ERROR] request bucket is err")
 			response.RespondError(writer, http.StatusBadRequest, fmt.Errorf("リクエスト情報が不足しています"))
 			return
 		}
+		if len(accountInfo.Pass) < 6 {
+			log.Println("[ERROR] request password is short")
+			response.RespondError(writer, http.StatusBadRequest, fmt.Errorf("request password is short"))
+			return
+		}
 
 		uid, err := uh.userUseCase.SignUp(accountInfo.UserName, accountInfo.Email, accountInfo.Pass)
 		if err != nil {
+			fmt.Printf("error %+v\n", err)
 			response.RespondError(writer, http.StatusInternalServerError, err)
 			return
 		}
 
-		writer.Write([]byte(uid))
+		response.RespondJSON(writer, 200, response.SuccessResponse{Token: uid})
 	}
 }
 
 func (uh userHandler) SignIn() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		var accountInfo request2.CreateUserAccountRequest
-		json.NewDecoder(request.Body).Decode(&accountInfo)
+		err := json.NewDecoder(request.Body).Decode(&accountInfo)
+		if err != nil {
+			log.Println("[ERROR] request bind is err")
+			response.RespondError(writer, http.StatusInternalServerError, fmt.Errorf("リクエストの取得に失敗しました"))
+		}
 
 		if accountInfo.Email == "" || accountInfo.Pass == "" || accountInfo.UserName == "" {
-			log.Println("[ERROR] request bucket is err")
+			fmt.Println("[ERROR] request bucket is err")
 			response.RespondError(writer, http.StatusBadRequest, fmt.Errorf("リクエスト情報が不足しています"))
 			return
 		}
+		if len(accountInfo.Pass) < 6 {
+			fmt.Println("[ERROR] request password is short")
+			response.RespondError(writer, http.StatusBadRequest, fmt.Errorf("request password is short"))
+			return
+		}
+
 		uid, err := uh.userUseCase.SignIn(accountInfo.Email, accountInfo.Pass)
 		if err != nil {
+			fmt.Printf("error %+v\n", err)
 			response.RespondError(writer, http.StatusInternalServerError, err)
 			return
 		}
-		writer.Write([]byte(uid))
+		response.RespondJSON(writer, 200, response.SuccessResponse{Token: uid})
 	}
 }
