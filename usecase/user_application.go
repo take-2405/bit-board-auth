@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"bit-board-auth/domain/repository"
-	"log"
 )
 
 type AuthUseCase interface {
@@ -21,7 +20,6 @@ func NewAuthUseCase(user repository.UserRepository) *authUseCase {
 func (uu authUseCase) SignUp(userName, email, pass string) (string, error) {
 	uid, err := uu.user.CreateUsersAccount(userName, email, pass)
 	if err != nil {
-		log.Println(err)
 		return "", err
 	}
 	return uid, nil
@@ -30,9 +28,7 @@ func (uu authUseCase) SignUp(userName, email, pass string) (string, error) {
 func (uu authUseCase) SignIn(email, pass string) (string, error) {
 	user, err := uu.user.GetUserInfo(email)
 	if err != nil {
-		log.Println(err)
-		return "a", err
+		return "", err
 	}
-	log.Println(user)
 	return user.UID, nil
 }

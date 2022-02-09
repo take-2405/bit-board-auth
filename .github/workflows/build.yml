@@ -1,3 +1,5 @@
+name: check project to build
+
 on:
   push:
     branches:

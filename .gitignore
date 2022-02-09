@@ -2,3 +2,5 @@
 .env
 .secret
 firebase-auth.json
+
+.idea/*

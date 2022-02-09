@@ -2,14 +2,15 @@ package disutil
 
 import (
 	"fmt"
+	"github.com/pkg/errors"
 	"os"
 )
 
-func CreateFireBaseConfig() {
+func CreateFireBaseConfig() error {
 	fp, err := os.Create("./firebase-auth.json")
 	if err != nil {
-		fmt.Println(err)
-		return
+		err = errors.Wrap(err, "os create firebase-auth.json")
+		return errors.WithStack(err)
 	}
 	defer fp.Close()
 
@@ -38,6 +39,8 @@ func CreateFireBaseConfig() {
 
 	_, err = fp.Write(([]byte)(file))
 	if err != nil {
-		fmt.Println(err)
+		err = errors.Wrap(err, "write content on firebase-auth.json")
+		return errors.WithStack(err)
 	}
+	return nil
 }
