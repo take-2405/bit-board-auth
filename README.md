@@ -26,6 +26,11 @@ go run cmd/main.go
 #### 使用AFW
 - chi
 
+#### use package
+- go-cache
+- firebase.google.com/go
+- github.com/pkg/errors
+
 #### CICD
 使用CI：github action
 - lintチェック

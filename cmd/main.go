@@ -5,8 +5,10 @@ import (
 	"bit-board-auth/di"
 	"bit-board-auth/infrastructure/disutil"
 	router2 "bit-board-auth/presentation/router"
+	"github.com/patrickmn/go-cache"
 	"log"
 	"net/http"
+	"time"
 )
 
 func main() {
@@ -21,10 +23,11 @@ func main() {
 		log.Fatalf("failed create firebase info file: %v", err)
 	}
 
+	c := cache.New(5*time.Minute, 10*time.Minute)
 	//ルーターを初期化
 	router := router2.NewServer()
 	//ルーティングとDI
-	di.InsertUserDI(router)
+	di.InsertUserDI(router, c)
 
 	//ルーター起動
 	port := config.GetServerPort()

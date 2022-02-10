@@ -6,6 +6,7 @@ import (
 	"bit-board-auth/usecase"
 	"encoding/json"
 	"fmt"
+	"github.com/patrickmn/go-cache"
 	"log"
 	"net/http"
 )
@@ -17,10 +18,11 @@ type UserHandler interface {
 
 type userHandler struct {
 	userUseCase usecase.AuthUseCase
+	cache       *cache.Cache
 }
 
-func NewUserHandler(userUseCase usecase.AuthUseCase) *userHandler {
-	return &userHandler{userUseCase: userUseCase}
+func NewUserHandler(userUseCase usecase.AuthUseCase, c *cache.Cache) *userHandler {
+	return &userHandler{userUseCase: userUseCase, cache: c}
 }
 
 func (uh userHandler) SignUp() http.HandlerFunc {
@@ -44,12 +46,21 @@ func (uh userHandler) SignUp() http.HandlerFunc {
 			return
 		}
 
+		_, ok := uh.cache.Get(accountInfo.Email)
+		if ok {
+			log.Println("this email already register")
+			response.RespondError(writer, http.StatusBadRequest, fmt.Errorf("this email already register"))
+			return
+		}
+
 		uid, err := uh.userUseCase.SignUp(accountInfo.UserName, accountInfo.Email, accountInfo.Pass)
 		if err != nil {
 			fmt.Printf("error %+v\n", err)
 			response.RespondError(writer, http.StatusInternalServerError, err)
 			return
 		}
+
+		uh.cache.Set(accountInfo.Email, uid, cache.DefaultExpiration)
 
 		response.RespondJSON(writer, 200, response.SuccessResponse{Token: uid})
 	}
@@ -75,12 +86,21 @@ func (uh userHandler) SignIn() http.HandlerFunc {
 			return
 		}
 
+		cacheUid, ok := uh.cache.Get(accountInfo.Email)
+		if ok {
+			log.Println(uh.cache.Get(accountInfo.Email))
+			response.RespondJSON(writer, 200, response.SuccessResponse{Token: cacheUid.(string)})
+			return
+		}
+
 		uid, err := uh.userUseCase.SignIn(accountInfo.Email, accountInfo.Pass)
 		if err != nil {
 			fmt.Printf("error %+v\n", err)
 			response.RespondError(writer, http.StatusInternalServerError, err)
 			return
 		}
+
+		uh.cache.Set(accountInfo.Email, uid, cache.DefaultExpiration)
 		response.RespondJSON(writer, 200, response.SuccessResponse{Token: uid})
 	}
 }
