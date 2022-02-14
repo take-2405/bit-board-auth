@@ -63,7 +63,7 @@ func (uh userHandler) SignUp() http.HandlerFunc {
 
 		uh.cache.Set(accountInfo.Email, uid, cache.DefaultExpiration)
 
-		response.RespondJSON(writer, 200, response.SuccessResponse{Token: middleware2.CreateJwt(uid)})
+		response.RespondJSON(writer, 200, response.SuccessResponse{Token: middleware2.CreateJwt(uid), UserID: uid})
 	}
 }
 
@@ -102,6 +102,6 @@ func (uh userHandler) SignIn() http.HandlerFunc {
 		}
 
 		uh.cache.Set(accountInfo.Email, uid, cache.DefaultExpiration)
-		response.RespondJSON(writer, 200, response.SuccessResponse{Token: middleware2.CreateJwt(uid)})
+		response.RespondJSON(writer, 200, response.SuccessResponse{Token: middleware2.CreateJwt(uid), UserID: uid})
 	}
 }
