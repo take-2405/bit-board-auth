@@ -14,8 +14,9 @@ func InsertUserDI(router *router.Server, c *cache.Cache) {
 	if err != nil {
 		log.Fatalf("error %+v\n", err)
 	}
+	mysqlRepository := infrastructure.NewMysqlRepository()
 
-	userQuery := infrastructure.NewArticlePersistence(*conn)
+	userQuery := infrastructure.NewUserPersistence(*mysqlRepository, *conn)
 	userUseCase := usecase.NewAuthUseCase(userQuery)
 	useHandler := controller.NewUserHandler(userUseCase, c)
 	router.Routing(useHandler)
