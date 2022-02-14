@@ -2,17 +2,23 @@
 ## 実行方法(随時変更)
 - go の開発環境が整っていることを前提とする
 
-**事前準備**
+**Firebaseを準備&環境変数の準備**
 - firebase プロジェクトを作成し、Authenticationの「method」で認証方法を設定し、秘密鍵を生成する
-- 秘密鍵をenv fileか環境変数とする
+- 秘密鍵をenv fileか環境変数として準備する
+- jwt生成のための秘密鍵も用意
 
-**makeコマンドが使用できる場合**  
+**DB(MySQL)を起動**
 ```cassandraql
-make run
+make compose-up 
+or
+cd build
+docker-composeup -d
 ```
 
-**makeコマンドが使用できない場合**  
+**APIを起動**  
 ```cassandraql
+make run
+or
 go run cmd/main.go
 ```
 
@@ -40,6 +46,9 @@ go run cmd/main.go
 #### 使用liter(静的解析ツール)
 - golangci-lint  
   go lint は非推奨のため未使用
+
+#### 認証方法
+- APIキー認証(有効期限1時間)
 
 #### ディレクトリ構成
 ```

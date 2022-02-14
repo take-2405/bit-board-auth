@@ -1,5 +1,6 @@
 GOCMD=go
 DOCKERCMD=docker
+DOCKERCOMPOSECMD=docker-compose
 GO_RUN=$(GOCMD) run
 GO_BUILD=$(GOCMD) build
 DOCKER_BUILD=$(DOCKERCMD) build
@@ -12,6 +13,10 @@ build:
 	$(GO_BUILD) -o server cmd/main.go
 run:
 	$(GO_RUN) cmd/main.go
+compose-up:
+	$(DOCKERCOMPOSECMD) -f ./build/docker-compose.yml up -d
+compose-down:
+	$(DOCKERCOMPOSECMD) -f ./build/docker-compose.yml down
 docker-build:
 	$(DOCKER_BUILD) ./ -t take2405/bit-board-auth:0.1.0
 docker-run:
