@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"github.com/dgrijalva/jwt-go"
+	"os"
 	"time"
 )
 
@@ -18,7 +19,6 @@ func CreateJwt(userID string) string {
 	//fmt.Printf("Claims: %#v\n", token.Claims) // CClaims: jwt.MapClaims{"exp":1634051243, "user_id":12345678}
 
 	// トークンに署名を付与
-	//TODO ここでローカルの秘密鍵を使用する
-	tokenString, _ := token.SignedString([]byte("SECRET_KEY"))
+	tokenString, _ := token.SignedString([]byte(os.Getenv("SECRET_KEY")))
 	return tokenString
 }
