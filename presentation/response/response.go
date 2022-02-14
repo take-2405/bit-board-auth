@@ -7,7 +7,8 @@ import (
 )
 
 type SuccessResponse struct {
-	Token string
+	Token  string
+	UserID string
 }
 
 type HTTPError struct {
