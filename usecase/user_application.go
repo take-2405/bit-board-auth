@@ -18,15 +18,18 @@ func NewAuthUseCase(user repository.UserRepository) *authUseCase {
 }
 
 func (uu authUseCase) SignUp(userName, email, pass string) (string, error) {
-	uid, err := uu.user.CreateUsersAccount(userName, email, pass)
+	userId, err := uu.user.CreateUsersAccountFirebase(userName, email, pass)
 	if err != nil {
 		return "", err
 	}
-	return uid, nil
+	if err = uu.user.CreateUsersAccountMysql(userId, userName, email, pass); err != nil {
+		return "", err
+	}
+	return userId, nil
 }
 
 func (uu authUseCase) SignIn(email, pass string) (string, error) {
-	user, err := uu.user.GetUserInfo(email)
+	user, err := uu.user.GetUserInfoFirebase(email)
 	if err != nil {
 		return "", err
 	}

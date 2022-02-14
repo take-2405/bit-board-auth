@@ -1,6 +1,7 @@
 package controller
 
 import (
+	middleware2 "bit-board-auth/presentation/middleware"
 	request2 "bit-board-auth/presentation/request"
 	"bit-board-auth/presentation/response"
 	"bit-board-auth/usecase"
@@ -62,7 +63,7 @@ func (uh userHandler) SignUp() http.HandlerFunc {
 
 		uh.cache.Set(accountInfo.Email, uid, cache.DefaultExpiration)
 
-		response.RespondJSON(writer, 200, response.SuccessResponse{Token: uid})
+		response.RespondJSON(writer, 200, response.SuccessResponse{Token: middleware2.CreateJwt(uid)})
 	}
 }
 
@@ -101,6 +102,6 @@ func (uh userHandler) SignIn() http.HandlerFunc {
 		}
 
 		uh.cache.Set(accountInfo.Email, uid, cache.DefaultExpiration)
-		response.RespondJSON(writer, 200, response.SuccessResponse{Token: uid})
+		response.RespondJSON(writer, 200, response.SuccessResponse{Token: middleware2.CreateJwt(uid)})
 	}
 }
